@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: laravel-nginx-ingress
+  labels:
+    name: laravel-nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+
+# Before applying this manifest,
+# make sure to run `minikube addons enable ingress`
+spec:
+  rules:
+    - host: laravelnginx.test
+      http:
+        paths:
+          # - path: /
+          #   backend:
+          #     serviceName: laravel-nginx
+          #     servicePort: 81
+          - pathType: Prefix
+            path: /(.*)
+            backend:
+              service:
+                name: laravel-nginx
+                port:
+                  number: 8085
+          # serviceName: laravel-nginx
+          # servicePort: 8085
